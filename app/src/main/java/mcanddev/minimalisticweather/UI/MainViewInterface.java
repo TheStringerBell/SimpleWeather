@@ -6,4 +6,5 @@ import mcanddev.minimalisticweather.POJO.MainList;
 public interface MainViewInterface {
 
     void fillListView(MainList mainList);
+//    void getText(String s);
 }

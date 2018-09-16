@@ -1,5 +1,7 @@
 package mcanddev.minimalisticweather.UI;
 
+import android.view.View;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -13,12 +15,14 @@ import mcanddev.minimalisticweather.RetModel.RetrofitClient;
 
 public class MainPresenter implements MainViewInterface {
 
-    MainViewInterface mvi;
+    private MainViewInterface mvi;
+
 
     public MainPresenter(MainViewInterface mvi){
         this.mvi = mvi;
 
     }
+
 
 
     @Override
@@ -33,7 +37,7 @@ public class MainPresenter implements MainViewInterface {
     public Observable<MainList> getPrediction(String name){
 
         return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-                .getNames("json?input=" +name+ "&key=" + ApiKeys.getApiKey)
+                .getNames("json?input=" +name+ "&key=" + ApiKeys.getApiKey + "&types=(cities)")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

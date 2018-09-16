@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    public static Retrofit retrofit;
+    private static Retrofit retrofit;
 
 
     public static Retrofit getRetrofitAutoComplete(){
@@ -40,37 +40,25 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    public void getPredictionList(){
-        getPrediction("Poprad").subscribeWith(getPredictionObserver());
+    public static Retrofit getRetrofitPlacesName(){
+
+        if(retrofit==null){
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            OkHttpClient okHttpClient = builder.build();
+
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://maps.googleapis.com/maps/api/place/textsearch/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+
+                    .client(okHttpClient)
+                    .build();
+
+        }
+
+        return retrofit;
     }
 
-    public Observable<MainList> getPrediction(String name){
-
-        return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-                .getNames("json?input=" +name+ "&key=" + ApiKeys.getApiKey)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public DisposableObserver<MainList> getPredictionObserver(){
-
-        return new DisposableObserver<MainList>() {
-            @Override
-            public void onNext(MainList mainList) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-
-            }
-
-            @Override
-            public void onComplete() {
 
 
-            }
-        };
-    }
 }
