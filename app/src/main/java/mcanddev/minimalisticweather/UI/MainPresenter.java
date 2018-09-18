@@ -53,7 +53,7 @@ public class MainPresenter implements MainViewInterface {
             @Override
             public void onNext(MainList mainList) {
                 mvi.fillListView(mainList);
-                dispose();
+
 
             }
 
