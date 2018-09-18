@@ -12,6 +12,7 @@ import mcanddev.minimalisticweather.POJO.Description;
 import mcanddev.minimalisticweather.POJO.MainList;
 import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -23,7 +24,8 @@ public class RetrofitClient {
 
     public static Retrofit getRetrofitAutoComplete(){
 
-        if(retrofit==null){
+        if(retrofit == null){
+
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             OkHttpClient okHttpClient = builder.build();
 
@@ -42,7 +44,11 @@ public class RetrofitClient {
 
     public static Retrofit getRetrofitPlacesName(){
 
-        if(retrofit==null){
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
+
+        if(retrofit == null){
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             OkHttpClient okHttpClient = builder.build();
 
@@ -50,6 +56,7 @@ public class RetrofitClient {
                     .baseUrl("https://maps.googleapis.com/maps/api/place/textsearch/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(client)
 
                     .client(okHttpClient)
                     .build();
@@ -58,6 +65,8 @@ public class RetrofitClient {
 
         return retrofit;
     }
+
+
 
 
 

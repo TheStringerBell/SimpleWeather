@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class GetLocation {
-
     @SerializedName("html_attributions")
     @Expose
     private List<Object> htmlAttributions = null;
@@ -43,4 +42,5 @@ public class GetLocation {
     }
 
 }
+
 

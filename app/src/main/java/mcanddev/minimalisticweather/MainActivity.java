@@ -10,21 +10,30 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import mcanddev.minimalisticweather.API.ApiKeys;
 import mcanddev.minimalisticweather.POJO.GetLocationPOJO.GetLocation;
 import mcanddev.minimalisticweather.POJO.MainList;
+import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import mcanddev.minimalisticweather.RetModel.RetrofitClient;
-import mcanddev.minimalisticweather.UI.LocationPresenter;
-import mcanddev.minimalisticweather.UI.LocationViewPresenter;
+
 import mcanddev.minimalisticweather.UI.MainPresenter;
 import mcanddev.minimalisticweather.UI.MainViewInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity  implements MainViewInterface, LocationViewPresenter{
+public class MainActivity extends AppCompatActivity  implements MainViewInterface{
 
     @BindView(R.id.search)
     EditText search;
@@ -39,7 +48,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     ArrayList<String> arrayList = new ArrayList<>();
 
     MainPresenter mainPresenter;
-    LocationPresenter locationPresenter;
+
 
 
     @Override
@@ -47,8 +56,11 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        setList();
+
         setupMVP();
+//        mainPresenter.getLocationString("Poprad");
+
+
 
 
 
@@ -62,17 +74,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
     }
 
-    @Override
-    public void finishUrl(GetLocation getLocation) {
-        if (getLocation != null){
 
-            String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
-            String lng = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
-            Toast.makeText(this, lat+" "+lng, Toast.LENGTH_LONG).show();
-        }
-
-
-    }
 
     @Override
     public void fillListView(MainList mainList) {
@@ -86,27 +88,59 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
             listView.setAdapter(arrayAdapter);
             setListViewClicable();
 
+
         }
 
     }
 
     public void setupMVP(){
         mainPresenter = new MainPresenter(this);
-        locationPresenter = new LocationPresenter(this);
+
     }
 
     public void getNames(String s){
         mainPresenter.getPredictionList(s);
     }
-    public void getLocation(String s){
-        locationPresenter.getLocationString(s);
-    }
+
 
     public void setListViewClicable(){
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
 
-            getLocation(arrayAdapter.getItem(i));
+            mainPresenter.getLocationString(arrayAdapter.getItem(i));
+
 
         });
     }
+
+    @Override
+    public void getLocationName(GetLocation getLocation) {
+        if (getLocation != null){
+            String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
+            String lng = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
+            Toast.makeText(this, lat+" "+lng, Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void test(){
+
+        RetrofitClient.getRetrofitPlacesName().create(RetrofitInterface.class)
+                .getResponse("json?input=" +"Poprad"+ "&key=" + ApiKeys.getApiKey);
+
+    Call<GetLocation> call = RetrofitClient.getRetrofitPlacesName().create(RetrofitInterface.class)
+            .getResponse("json?input=" +"Poprad"+ "&key=" + ApiKeys.getApiKey);
+        call.enqueue(new Callback<GetLocation>() {
+            @Override
+            public void onResponse(Call<GetLocation> call, Response<GetLocation> response) {
+                Log.d("RESPONSE", " " +response.body().getResults().get(0).getGeometry().getLocation().getLat());
+            }
+
+            @Override
+            public void onFailure(Call<GetLocation> call, Throwable t) {
+
+            }
+        });
+}
+
+
 }
