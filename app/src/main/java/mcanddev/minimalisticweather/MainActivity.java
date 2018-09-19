@@ -1,6 +1,9 @@
 package mcanddev.minimalisticweather;
 
 
+import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -8,6 +11,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 import mcanddev.minimalisticweather.API.ApiKeys;
 import mcanddev.minimalisticweather.POJO.GetLocationPOJO.GetLocation;
 import mcanddev.minimalisticweather.POJO.MainList;
+import mcanddev.minimalisticweather.POJO.WeatherPOJO.Datum;
 import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
 import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import mcanddev.minimalisticweather.RetModel.RetrofitClient;
@@ -61,20 +67,8 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(1537354800*1000L);
-//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-//        int minute = calendar.get(Calendar.MINUTE);
-//        Log.d("TIME", " " + hour +" : " + "00");
-
-
         setupMVP();
-//        Ok();
-//        mainPresenter.getLocationString("Poprad");
-
-
-
-
+//        setupNotifyLayout();
 
         button.setOnClickListener(view ->{
             if (!search.getText().toString().isEmpty()){
@@ -127,5 +121,29 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @Override
     public void getWeatherObject(GetWeather getWeather) {
 
+        List<Datum> data = getWeather.getHourly().getData();
+
+
     }
+
+    public void setupNotifyLayout(){
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notify_layout);
+        remoteViews.setImageViewResource(R.id.image2, R.mipmap.cloudy);
+        remoteViews.setTextViewText(R.id.time2, "11:00");
+        remoteViews.setTextViewText(R.id.temp, "24");
+        remoteViews.setTextViewText(R.id.time, "45");
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "SIMPLE_WEATHER")
+                .setContent(remoteViews)
+                .setSmallIcon(R.mipmap.cloudy)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(1, mBuilder.build());
+
+
+
+
+    }
+
 }

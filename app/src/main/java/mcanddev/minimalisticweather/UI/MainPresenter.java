@@ -2,6 +2,7 @@ package mcanddev.minimalisticweather.UI;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.RemoteViews;
 
 import java.time.LocalTime;
 import java.util.Calendar;
@@ -16,6 +17,7 @@ import mcanddev.minimalisticweather.POJO.GetLocationPOJO.GetLocation;
 import mcanddev.minimalisticweather.POJO.MainList;
 import mcanddev.minimalisticweather.POJO.WeatherPOJO.Datum;
 import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
+import mcanddev.minimalisticweather.R;
 import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import mcanddev.minimalisticweather.RetModel.RetrofitClient;
 import mcanddev.minimalisticweather.RetModel.WeatherClient;
@@ -154,11 +156,11 @@ public class MainPresenter implements MainViewInterface {
 
                 List<Datum> data = getWeather.getHourly().getData();
                 double temp;
-                for (int i = 0; i< data.size(); i+=2){
+                for (int i = 0; i < 16; i+=3){
                     temp = data.get(i).getTemperature();
                     calendar.setTimeInMillis(data.get(i).getTime()*1000L);
 
-                    Log.d("TIME "," " + calendar.get(Calendar.HOUR_OF_DAY) + " : 00" + " temp: " + temp );
+                    Log.d("TIME "," " +  calendar.get(Calendar.HOUR_OF_DAY) + " : 00" + " temp: " + (int) temp  + " " + data.get(i).getSummary());
                 }
 
             }
@@ -176,6 +178,8 @@ public class MainPresenter implements MainViewInterface {
             }
         };
     }
+
+
 
 
 }
