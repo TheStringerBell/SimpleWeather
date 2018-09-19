@@ -30,7 +30,7 @@ public class RetrofitClient {
             OkHttpClient okHttpClient = builder.build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://maps.googleapis.com/maps/api/place/autocomplete/")
+                    .baseUrl("https://maps.googleapis.com/maps/api/place/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 
@@ -42,23 +42,23 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    public static Retrofit getRetrofitPlacesName(){
+    public static Retrofit getRetrofitWeather(){
 
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
+//        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+//        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
 
         if(retrofit == null){
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             OkHttpClient okHttpClient = builder.build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://maps.googleapis.com/maps/api/place/textsearch/")
+                    .baseUrl("https://api.darksky.net/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(client)
-
                     .client(okHttpClient)
+
+
                     .build();
 
         }

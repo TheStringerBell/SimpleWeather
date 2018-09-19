@@ -4,6 +4,7 @@ package mcanddev.minimalisticweather.RetModel.Interface;
 import io.reactivex.Observable;
 import mcanddev.minimalisticweather.POJO.GetLocationPOJO.GetLocation;
 import mcanddev.minimalisticweather.POJO.MainList;
+import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -20,7 +21,7 @@ public interface RetrofitInterface {
     Observable<GetLocation> getLocation(@Url String url);
 
     @GET
-    Call<GetLocation> getResponse(@Url String url);
+    Observable<GetWeather> getWeather(@Url String url);
 
 
 

@@ -13,16 +13,20 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import mcanddev.minimalisticweather.API.ApiKeys;
 import mcanddev.minimalisticweather.POJO.GetLocationPOJO.GetLocation;
 import mcanddev.minimalisticweather.POJO.MainList;
+import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
 import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import mcanddev.minimalisticweather.RetModel.RetrofitClient;
 
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     ArrayList<String> arrayList = new ArrayList<>();
 
     MainPresenter mainPresenter;
+    String s;
 
 
 
@@ -56,8 +61,15 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(1537354800*1000L);
+//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//        int minute = calendar.get(Calendar.MINUTE);
+//        Log.d("TIME", " " + hour +" : " + "00");
+
 
         setupMVP();
+//        Ok();
 //        mainPresenter.getLocationString("Poprad");
 
 
@@ -113,34 +125,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     }
 
     @Override
-    public void getLocationName(GetLocation getLocation) {
-        if (getLocation != null){
-            String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
-            String lng = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
-            Toast.makeText(this, lat+" "+lng, Toast.LENGTH_LONG).show();
-        }
+    public void getWeatherObject(GetWeather getWeather) {
 
     }
-
-    public void test(){
-
-        RetrofitClient.getRetrofitPlacesName().create(RetrofitInterface.class)
-                .getResponse("json?input=" +"Poprad"+ "&key=" + ApiKeys.getApiKey);
-
-    Call<GetLocation> call = RetrofitClient.getRetrofitPlacesName().create(RetrofitInterface.class)
-            .getResponse("json?input=" +"Poprad"+ "&key=" + ApiKeys.getApiKey);
-        call.enqueue(new Callback<GetLocation>() {
-            @Override
-            public void onResponse(Call<GetLocation> call, Response<GetLocation> response) {
-                Log.d("RESPONSE", " " +response.body().getResults().get(0).getGeometry().getLocation().getLat());
-            }
-
-            @Override
-            public void onFailure(Call<GetLocation> call, Throwable t) {
-
-            }
-        });
-}
-
-
 }
