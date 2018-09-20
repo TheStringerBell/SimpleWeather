@@ -25,8 +25,7 @@ import mcanddev.minimalisticweather.RetModel.WeatherClient;
 
 public class MainPresenter implements MainViewInterface {
 
-    Calendar calendar = Calendar.getInstance();
-    int hour;
+    private Calendar calendar = Calendar.getInstance();
 
     private MainViewInterface mvi;
 
@@ -152,23 +151,15 @@ public class MainPresenter implements MainViewInterface {
         return new DisposableObserver<GetWeather>() {
             @Override
             public void onNext(GetWeather getWeather) {
+                Log.d("WEATHER", " " +getWeather.getHourly().getData().size());
                 mvi.getWeatherObject(getWeather);
 
-                List<Datum> data = getWeather.getHourly().getData();
-                double temp;
-                for (int i = 0; i < 16; i+=3){
-                    temp = data.get(i).getTemperature();
-                    calendar.setTimeInMillis(data.get(i).getTime()*1000L);
 
-                    Log.d("TIME "," " +  calendar.get(Calendar.HOUR_OF_DAY) + " : 00" + " temp: " + (int) temp  + " " + data.get(i).getSummary());
-                }
 
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("ERROR", " ");
-                e.printStackTrace();
 
             }
 

@@ -2,6 +2,7 @@ package mcanddev.minimalisticweather;
 
 
 import android.app.NotificationManager;
+import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ import mcanddev.minimalisticweather.RetModel.RetrofitClient;
 
 import mcanddev.minimalisticweather.UI.MainPresenter;
 import mcanddev.minimalisticweather.UI.MainViewInterface;
+import mcanddev.minimalisticweather.UI.Notification.SetupNotification;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,8 +60,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     ArrayList<String> arrayList = new ArrayList<>();
 
     MainPresenter mainPresenter;
-    String s;
-
 
 
     @Override
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupMVP();
+
 //        setupNotifyLayout();
 
         button.setOnClickListener(view ->{
@@ -100,7 +101,10 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     }
 
     public void setupMVP(){
+
         mainPresenter = new MainPresenter(this);
+
+
 
     }
 
@@ -120,30 +124,23 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
     @Override
     public void getWeatherObject(GetWeather getWeather) {
+        if (getWeather != null) {
+            List<Datum> data = getWeather.getHourly().getData();
+            new SetupNotification(this, getPackageName(), data).setupNotifyLayout();
 
-        List<Datum> data = getWeather.getHourly().getData();
-
-
-    }
-
-    public void setupNotifyLayout(){
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notify_layout);
-        remoteViews.setImageViewResource(R.id.image2, R.mipmap.cloudy);
-        remoteViews.setTextViewText(R.id.time2, "11:00");
-        remoteViews.setTextViewText(R.id.temp, "24");
-        remoteViews.setTextViewText(R.id.time, "45");
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "SIMPLE_WEATHER")
-                .setContent(remoteViews)
-                .setSmallIcon(R.mipmap.cloudy)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(1, mBuilder.build());
+        }
 
 
 
 
     }
+
+
+
+
+
+
+
+
 
 }
