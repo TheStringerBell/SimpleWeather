@@ -41,21 +41,21 @@ public class SetupNotification {
         remoteViews.setTextViewText(R.id.time, getTime(2));
         remoteViews.setTextViewText(R.id.temp, getTemp(data.get(2).getTemperature()));
 
-        remoteViews.setImageViewResource(R.id.image3, getIcon(data.get(5).getIcon()));
-        remoteViews.setTextViewText(R.id.time3, getTime(5));
-        remoteViews.setTextViewText(R.id.temp3, getTemp(data.get(5).getTemperature()));
+        remoteViews.setImageViewResource(R.id.image3, getIcon(data.get(4).getIcon()));
+        remoteViews.setTextViewText(R.id.time3, getTime(4));
+        remoteViews.setTextViewText(R.id.temp3, getTemp(data.get(4).getTemperature()));
 
-        remoteViews.setImageViewResource(R.id.image4, getIcon(data.get(8).getIcon()));
-        remoteViews.setTextViewText(R.id.time4, getTime(8));
-        remoteViews.setTextViewText(R.id.temp4, getTemp(data.get(8).getTemperature()));
+        remoteViews.setImageViewResource(R.id.image4, getIcon(data.get(6).getIcon()));
+        remoteViews.setTextViewText(R.id.time4, getTime(6));
+        remoteViews.setTextViewText(R.id.temp4, getTemp(data.get(6).getTemperature()));
 
-        remoteViews.setImageViewResource(R.id.image5, getIcon(data.get(11).getIcon()));
-        remoteViews.setTextViewText(R.id.time5, getTime(11));
-        remoteViews.setTextViewText(R.id.temp5, getTemp(data.get(11).getTemperature()));
+        remoteViews.setImageViewResource(R.id.image5, getIcon(data.get(8).getIcon()));
+        remoteViews.setTextViewText(R.id.time5, getTime(8));
+        remoteViews.setTextViewText(R.id.temp5, getTemp(data.get(8).getTemperature()));
 
-        remoteViews.setImageViewResource(R.id.image6, getIcon(data.get(14).getIcon()));
-        remoteViews.setTextViewText(R.id.time6, getTime(14));
-        remoteViews.setTextViewText(R.id.temp6, getTemp(data.get(14).getTemperature()));
+        remoteViews.setImageViewResource(R.id.image6, getIcon(data.get(10).getIcon()));
+        remoteViews.setTextViewText(R.id.time6, getTime(10));
+        remoteViews.setTextViewText(R.id.temp6, getTemp(data.get(10).getTemperature()));
 
 
 

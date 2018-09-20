@@ -25,7 +25,7 @@ public class GetWeatherIcon {
             case "fog": icon = R.mipmap.fog; break;
             case "cloudy": icon = R.mipmap.cloudy; break;
             case "partly-cloudy-day": icon = R.mipmap.partlycloudy; break;
-            case "partly-cloudy-night": icon = R.mipmap.partlycloudy; break;
+            case "partly-cloudy-night": icon = R.mipmap.night_cloudy; break;
             case "hail": icon = R.mipmap.hail; break;
             case "thunderstorm": icon = R.mipmap.thunderstorm; break;
         }
