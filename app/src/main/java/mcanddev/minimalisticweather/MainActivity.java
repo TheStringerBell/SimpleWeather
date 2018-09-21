@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     public void setListViewClicable(){
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
 
-            mainPresenter.getLocationString(arrayAdapter.getItem(i));
+            mainPresenter.combined(arrayAdapter.getItem(i));
 
 
         });
