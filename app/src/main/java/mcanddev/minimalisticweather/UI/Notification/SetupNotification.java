@@ -22,8 +22,6 @@ public class SetupNotification {
     private List<Datum> data;
 
 
-    private int time;
-
 
 
     public SetupNotification(Context context, String PACKAGE_NAME, List<Datum> data){
@@ -75,9 +73,9 @@ public class SetupNotification {
         calendar.setTimeInMillis(data.get(i).getTime() * 1000L);
         if (calendar.get(Calendar.HOUR_OF_DAY) < 10){
             return "0" + calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
-        }else {
-            return calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
         }
+        return calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
+
 
 
     }
