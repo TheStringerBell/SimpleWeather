@@ -19,28 +19,25 @@ import mcanddev.minimalisticweather.RetModel.WeatherClient;
 public class MainPresenter implements MainViewInterface {
 
 
-
     private MainViewInterface mvi;
 
 
     public MainPresenter(MainViewInterface mvi){
         this.mvi = mvi;
-
     }
 
     @Override
     public void getWeatherObject(GetWeather getWeather) {
-
     }
 
     @Override
     public void fillListView(MainList mainList) {
-
     }
 
     public void getPredictionList(String name){
         getPrediction(name).subscribeWith(getPredictionObserver());
     }
+
 
     private Observable<MainList> getPrediction(String name){
 
@@ -56,22 +53,15 @@ public class MainPresenter implements MainViewInterface {
             @Override
             public void onNext(MainList mainList) {
                 mvi.fillListView(mainList);
-
-
-
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-
             }
 
             @Override
             public void onComplete() {
-
-
-
             }
         };
     }
@@ -79,11 +69,8 @@ public class MainPresenter implements MainViewInterface {
 
     private Observable<GetLocation> getAttributes(String name){
 
-
         return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-
                 .getLocation("textsearch/"+"json?input=" +name.replace(" ", "%")+ "&key=" + ApiKeys.getApiKey)
-
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -93,11 +80,8 @@ public class MainPresenter implements MainViewInterface {
 
     private Observable<GetWeather> getWeatherObservable(String lat, String lon){
 
-
         return WeatherClient.getRetrofitWeather().create(RetrofitInterface.class)
-
                 .getWeather("forecast/" +ApiKeys.getWeatherApiKey + "/" +lat +  "," + lon + "?units=auto")
-
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
