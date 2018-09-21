@@ -1,6 +1,9 @@
 package mcanddev.minimalisticweather.UI;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -18,12 +21,15 @@ import mcanddev.minimalisticweather.RetModel.WeatherClient;
 
 public class MainPresenter implements MainViewInterface {
 
-
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
     private MainViewInterface mvi;
+    private Context context;
 
 
-    public MainPresenter(MainViewInterface mvi){
+    public MainPresenter(MainViewInterface mvi, Context context){
         this.mvi = mvi;
+        this.context = context;
     }
 
     @Override
@@ -92,9 +98,20 @@ public class MainPresenter implements MainViewInterface {
         getAttributes(s).flatMap(getLocation -> {
             String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
             String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
+            sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+                    editor = sp.edit();
+                    editor.putString("Lat", lat);
+                    editor.putString("Lon", lat);
+                    editor.apply();
             return getWeatherObservable(lat, lon);
         }
         ).subscribe(getWeather -> mvi.getWeatherObject(getWeather));
+    }
+
+    public void onlyWeather(String s, String l){
+        getWeatherObservable(s, l).subscribe(getWeather -> mvi.getWeatherObject(getWeather));
+
     }
 
 

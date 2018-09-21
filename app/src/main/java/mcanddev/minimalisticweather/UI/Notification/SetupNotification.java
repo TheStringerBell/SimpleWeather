@@ -7,8 +7,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import mcanddev.minimalisticweather.MainActivity;
 import mcanddev.minimalisticweather.POJO.WeatherPOJO.Datum;
@@ -20,18 +23,20 @@ public class SetupNotification {
     private Context context;
     private String PACKAGE_NAME;
     private List<Datum> data;
+    private String units;
 
 
 
 
-    public SetupNotification(Context context, String PACKAGE_NAME, List<Datum> data){
+    public SetupNotification(Context context, String PACKAGE_NAME, List<Datum> data, String units){
         this.context = context;
         this.PACKAGE_NAME = PACKAGE_NAME;
         this.data = data;
+        this.units = units;
     }
 
     public void setupNotifyLayout(){
-        Log.d("WEATHER2", " " +data.size());
+
         RemoteViews remoteViews = new RemoteViews(PACKAGE_NAME, R.layout.custom_notify_layout);
 
 
@@ -71,10 +76,29 @@ public class SetupNotification {
     private String getTime(int i){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(data.get(i).getTime() * 1000L);
-        if (calendar.get(Calendar.HOUR_OF_DAY) < 10){
-            return "0" + calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
+
+
+
+        if (units.equals("si") || units.equals("uk2") || units.equals("ca")){
+            if (calendar.get(Calendar.HOUR_OF_DAY) < 10){
+                return "0" + calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
+            }
+            return calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
         }
-        return calendar.get(Calendar.HOUR_OF_DAY) + " : 00";
+
+        if (calendar.get(Calendar.AM_PM) == 1){
+            if (calendar.get(Calendar.HOUR) == 0){
+                return  "12" +  " AM";
+            }
+                return  calendar.get(Calendar.HOUR) +  " PM";
+            }
+        if (calendar.get(Calendar.HOUR) == 0){
+            return  "12" +  " PM";
+        }
+            return  calendar.get(Calendar.HOUR) +  " AM";
+
+
+
 
 
 
@@ -84,6 +108,10 @@ public class SetupNotification {
     }
 
     private String getTemp(Double d){
-        return String.valueOf( d.intValue()) + "°C";
+        if (units.equals("si") || units.equals("uk2") || units.equals("ca")){
+            return String.valueOf( d.intValue()) + "°C";
+        }
+        return String.valueOf( d.intValue()) + "°F";
+
     }
 }
