@@ -1,20 +1,11 @@
 package mcanddev.minimalisticweather.service;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import mcanddev.minimalisticweather.MainActivity;
-import mcanddev.minimalisticweather.UI.MainPresenter;
-import mcanddev.minimalisticweather.UI.MainViewInterface;
-import mcanddev.minimalisticweather.UI.Notification.SetupNotification;
 
 
 public class CreateJob extends Job{
