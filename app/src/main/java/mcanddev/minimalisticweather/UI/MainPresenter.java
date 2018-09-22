@@ -13,13 +13,10 @@ import mcanddev.minimalisticweather.API.ApiKeys;
 import mcanddev.minimalisticweather.POJO.GetLocationPOJO.GetLocation;
 import mcanddev.minimalisticweather.POJO.MainList;
 import mcanddev.minimalisticweather.POJO.OpenWeather.GetOpenWeather;
-import mcanddev.minimalisticweather.POJO.WeatherPOJO.Datum;
-import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
-import mcanddev.minimalisticweather.R;
 import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import mcanddev.minimalisticweather.RetModel.OpenWeatherClient;
 import mcanddev.minimalisticweather.RetModel.RetrofitClient;
-import mcanddev.minimalisticweather.RetModel.WeatherClient;
+
 
 
 public class MainPresenter implements MainViewInterface {
@@ -51,7 +48,7 @@ public class MainPresenter implements MainViewInterface {
     private Observable<MainList> getPrediction(String name){
 
         return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-                .getNames("autocomplete/"+"json?input=" +name+ "&key=" + ApiKeys.getApiKey + "&types=(cities)")
+                .getNames("autocomplete/"+"json?input=" +name.replace(" ", "%20")+ "&key=" + ApiKeys.getApiKey + "&types=(cities)")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -61,8 +58,11 @@ public class MainPresenter implements MainViewInterface {
         return new DisposableObserver<MainList>() {
             @Override
             public void onNext(MainList mainList) {
+
                 mvi.fillListView(mainList);
+
             }
+
 
             @Override
             public void onError(Throwable e) {
@@ -79,7 +79,7 @@ public class MainPresenter implements MainViewInterface {
     private Observable<GetLocation> getAttributes(String name){
 
         return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-                .getLocation("textsearch/"+"json?input=" +name.replace(" ", "%")+ "&key=" + ApiKeys.getApiKey)
+                .getLocation("textsearch/"+"json?input=" +name.replace(" ", "%20")+ "&key=" + ApiKeys.getApiKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -132,14 +132,17 @@ public class MainPresenter implements MainViewInterface {
         getAttributes(s).flatMap(getLocation -> {
                     String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
                     String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
+
                     sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
                     editor = sp.edit();
                     editor.putString("Lat", lat);
                     editor.putString("Lon", lon);
                     editor.apply();
-                    return getOpenWeatherObservable("49.0511221", "20.295414", "metric");
+                    return getOpenWeatherObservable(lat, lon, "metric");
                 }
-        ).subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather));
+        )
+
+                .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather));
     }
 
 

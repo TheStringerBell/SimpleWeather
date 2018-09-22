@@ -11,6 +11,9 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.evernote.android.job.JobManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -22,6 +25,8 @@ import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
 import mcanddev.minimalisticweather.UI.MainPresenter;
 import mcanddev.minimalisticweather.UI.MainViewInterface;
 import mcanddev.minimalisticweather.UI.Notification.SetupNotification;
+import mcanddev.minimalisticweather.service.CreateJob;
+import mcanddev.minimalisticweather.service.JobCreator;
 import mcanddev.minimalisticweather.service.StartJob;
 
 
@@ -42,14 +47,17 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
     MainPresenter mainPresenter;
     SharedPreferences sp;
+    String lat;
+    String lon;
+    String units;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        JobManager.create(this).addJobCreator(new JobCreator());
         setupMVP();
-
+        createJob();
 
 
         button.setOnClickListener(view ->{
@@ -57,8 +65,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
                 getNames(search.getText().toString().replace(" ", "%"));
             }
         } );
-
-
 
     }
 
@@ -76,7 +82,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
             listView.setAdapter(arrayAdapter);
             setListViewClicable();
 
-
         }
 
     }
@@ -84,11 +89,14 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     public void setupMVP(){
         mainPresenter = new MainPresenter(this, getApplicationContext());
         sp = getApplicationContext().getSharedPreferences("Settings", MODE_PRIVATE);
-
+        lat = sp.getString("Lat", "o");
+        lon = sp.getString("Lon", "o");
+        units = sp.getString("Units", "metric");
 
         if (!sp.getString("Lat", "o").equals("o")) {
 
-            mainPresenter.onlyWeather(sp.getString("Lat", "n"), sp.getString("Lon", "n"), sp.getString("Units", "metric"));
+            getOnlyWeather();
+
         }
 
 
@@ -100,34 +108,32 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
 
     public void setListViewClicable(){
-        listView.setOnItemClickListener((adapterView, view, i, l) -> {
-
-            mainPresenter.combined(arrayAdapter.getItem(i));
-
-
-
-        });
+        listView.setOnItemClickListener((adapterView, view, i, l) ->
+            mainPresenter.combined(arrayAdapter.getItem(i))
+        );
     }
 
     @Override
     public void getWeatherObject(GetOpenWeather getWeather) {
         if (getWeather != null) {
+            Log.d("JOB SUCCESS", " ");
 
+            new SetupNotification(this, getPackageName(), getWeather, units).setupNotifyLayout();
 
-            new SetupNotification(this, getPackageName(), getWeather, sp.getString("Units", "metric")).setupNotifyLayout();
+        }
+    }
 
+    public void createJob(){
+        if (!lat.equals("o")){
+            CreateJob.scheduleJob();
         }
 
     }
 
-    public void createJob(Context context){
-        new StartJob(context).createJob();
+
+    public void getOnlyWeather(){
+        mainPresenter.onlyWeather(lat, lon, units );
     }
-
-
-
-
-
 
 
 

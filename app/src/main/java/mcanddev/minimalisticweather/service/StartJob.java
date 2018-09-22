@@ -6,19 +6,32 @@ import android.support.annotation.Nullable;
 
 import com.evernote.android.job.*;
 
+import java.util.concurrent.TimeUnit;
 
 
 public class StartJob {
-    private Context context;
+//    private Context context;
+//    private String lat;
+//    private String lon;
+//    private String units;
+//
+//    public StartJob(Context context, String lat, String lon, String units){
+//        this.context = context;
+//        this.lat = lat;
+//        this.units = units;
+//        this.lon = lon;
+//
+//    }
 
-    public StartJob(Context context){
-        this.context = context;
 
-    }
+    public static void scheduleJob(){
+        new JobRequest.Builder(CreateJob.TAG)
+                .setPeriodic(TimeUnit.HOURS.toMillis(4))
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .build()
 
-
-    public void createJob(){
-        JobManager.create(context).addJobCreator(tag ->  null);
+                .schedule();
     }
     }
 
