@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
         button.setOnClickListener(view ->{
             if (!search.getText().toString().isEmpty()){
-                getNames(search.getText().toString().replace(" ", "%"));
+                mainPresenter.getPredictionList((search.getText().toString().replace(" ", "%20")));
             }
         } );
 
@@ -84,16 +84,8 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         units = getShared.getUnits();
 
         if (!lat.equals("o")) {
-
             getOnlyWeather();
-
         }
-
-
-    }
-
-    public void getNames(String s){
-        mainPresenter.getPredictionList(s);
     }
 
 
