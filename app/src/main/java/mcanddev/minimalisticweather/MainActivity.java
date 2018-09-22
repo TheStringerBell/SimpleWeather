@@ -2,32 +2,22 @@ package mcanddev.minimalisticweather;
 
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.evernote.android.job.JobManager;
-
 import java.util.ArrayList;
-import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mcanddev.minimalisticweather.POJO.MainList;
 import mcanddev.minimalisticweather.POJO.OpenWeather.GetOpenWeather;
-import mcanddev.minimalisticweather.POJO.WeatherPOJO.Datum;
-import mcanddev.minimalisticweather.POJO.WeatherPOJO.GetWeather;
 import mcanddev.minimalisticweather.UI.MainPresenter;
 import mcanddev.minimalisticweather.UI.MainViewInterface;
 import mcanddev.minimalisticweather.UI.Notification.SetupNotification;
-import mcanddev.minimalisticweather.service.CreateJob;
-import mcanddev.minimalisticweather.service.JobCreator;
-import mcanddev.minimalisticweather.service.StartJob;
 import mcanddev.minimalisticweather.utils.GetShared;
 
 
@@ -87,7 +77,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
     public void setupMVP(){
         getShared = new GetShared(this);
-//        getShared.setupShared();
         mainPresenter = new MainPresenter(this, getApplicationContext());
 
         lat = getShared.getLat();

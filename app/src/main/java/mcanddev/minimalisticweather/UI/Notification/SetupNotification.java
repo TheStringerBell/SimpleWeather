@@ -106,9 +106,6 @@ public class SetupNotification {
 
 
 
-
-
-
     }
     private int getIcon(String s){
         return new GetWeatherIcon(s).getIcon();
