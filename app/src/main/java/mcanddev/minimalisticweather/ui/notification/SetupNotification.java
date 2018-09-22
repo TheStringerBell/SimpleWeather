@@ -1,4 +1,4 @@
-package mcanddev.minimalisticweather.ui.Notification;
+package mcanddev.minimalisticweather.ui.notification;
 
 
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.widget.RemoteViews;
 import java.util.Calendar;
 import java.util.List;
 
-import mcanddev.minimalisticweather.pojo.OpenWeather.GetOpenWeather;
+import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 import mcanddev.minimalisticweather.R;
 import mcanddev.minimalisticweather.utils.GetWeatherIcon;
 
@@ -19,7 +19,7 @@ public class SetupNotification {
     private String PACKAGE_NAME;
     private String units;
     private GetOpenWeather data;
-    private List<mcanddev.minimalisticweather.pojo.OpenWeather.List> list;
+    private List<mcanddev.minimalisticweather.pojo.openweather.List> list;
 
 
 

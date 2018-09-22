@@ -1,5 +1,5 @@
 
-package mcanddev.minimalisticweather.pojo.GetLocationPOJO;
+package mcanddev.minimalisticweather.pojo.places;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

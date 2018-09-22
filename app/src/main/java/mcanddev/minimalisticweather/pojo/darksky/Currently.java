@@ -1,10 +1,10 @@
 
-package mcanddev.minimalisticweather.pojo.WeatherPOJO;
+package mcanddev.minimalisticweather.pojo.darksky;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+public class Currently {
 
     @SerializedName("time")
     @Expose
@@ -57,9 +57,6 @@ public class Datum {
     @SerializedName("ozone")
     @Expose
     private Double ozone;
-    @SerializedName("precipType")
-    @Expose
-    private String precipType;
 
     public Integer getTime() {
         return time;
@@ -195,14 +192,6 @@ public class Datum {
 
     public void setOzone(Double ozone) {
         this.ozone = ozone;
-    }
-
-    public String getPrecipType() {
-        return precipType;
-    }
-
-    public void setPrecipType(String precipType) {
-        this.precipType = precipType;
     }
 
 }

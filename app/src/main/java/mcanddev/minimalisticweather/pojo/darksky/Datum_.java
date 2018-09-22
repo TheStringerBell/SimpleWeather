@@ -1,5 +1,5 @@
 
-package mcanddev.minimalisticweather.pojo.WeatherPOJO;
+package mcanddev.minimalisticweather.pojo.darksky;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

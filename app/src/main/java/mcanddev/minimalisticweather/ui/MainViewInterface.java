@@ -2,7 +2,7 @@ package mcanddev.minimalisticweather.ui;
 
 
 import mcanddev.minimalisticweather.pojo.MainList;
-import mcanddev.minimalisticweather.pojo.OpenWeather.GetOpenWeather;
+import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 
 public interface MainViewInterface {
 

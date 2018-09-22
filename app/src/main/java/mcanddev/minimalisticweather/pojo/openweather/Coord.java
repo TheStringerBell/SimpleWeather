@@ -1,17 +1,17 @@
 
-package mcanddev.minimalisticweather.pojo.GetLocationPOJO;
+package mcanddev.minimalisticweather.pojo.openweather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Southwest {
+public class Coord {
 
     @SerializedName("lat")
     @Expose
     private Double lat;
-    @SerializedName("lng")
+    @SerializedName("lon")
     @Expose
-    private Double lng;
+    private Double lon;
 
     public Double getLat() {
         return lat;
@@ -21,12 +21,12 @@ public class Southwest {
         this.lat = lat;
     }
 
-    public Double getLng() {
-        return lng;
+    public Double getLon() {
+        return lon;
     }
 
-    public void setLng(Double lng) {
-        this.lng = lng;
+    public void setLon(Double lon) {
+        this.lon = lon;
     }
 
 }

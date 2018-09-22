@@ -1,5 +1,5 @@
 
-package mcanddev.minimalisticweather.pojo.OpenWeather;
+package mcanddev.minimalisticweather.pojo.openweather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

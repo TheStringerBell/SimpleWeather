@@ -2,10 +2,10 @@ package mcanddev.minimalisticweather.network.model;
 
 
 import io.reactivex.Observable;
-import mcanddev.minimalisticweather.pojo.GetLocationPOJO.GetLocation;
+import mcanddev.minimalisticweather.pojo.places.GetLocation;
 import mcanddev.minimalisticweather.pojo.MainList;
-import mcanddev.minimalisticweather.pojo.OpenWeather.GetOpenWeather;
-import mcanddev.minimalisticweather.pojo.WeatherPOJO.GetWeather;
+import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
+import mcanddev.minimalisticweather.pojo.darksky.GetWeather;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Url;

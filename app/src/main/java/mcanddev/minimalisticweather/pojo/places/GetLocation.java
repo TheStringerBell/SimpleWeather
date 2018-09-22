@@ -1,4 +1,4 @@
-package mcanddev.minimalisticweather.pojo.GetLocationPOJO;
+package mcanddev.minimalisticweather.pojo.places;
 
 
 

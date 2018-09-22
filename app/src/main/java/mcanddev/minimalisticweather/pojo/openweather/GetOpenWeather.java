@@ -1,5 +1,5 @@
 
-package mcanddev.minimalisticweather.pojo.OpenWeather;
+package mcanddev.minimalisticweather.pojo.openweather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -17,7 +17,7 @@ public class GetOpenWeather {
     private Integer cnt;
     @SerializedName("list")
     @Expose
-    private java.util.List<mcanddev.minimalisticweather.pojo.OpenWeather.List> list = null;
+    private java.util.List<mcanddev.minimalisticweather.pojo.openweather.List> list = null;
     @SerializedName("city")
     @Expose
     private City city;
@@ -46,11 +46,11 @@ public class GetOpenWeather {
         this.cnt = cnt;
     }
 
-    public java.util.List<mcanddev.minimalisticweather.pojo.OpenWeather.List> getList() {
+    public java.util.List<mcanddev.minimalisticweather.pojo.openweather.List> getList() {
         return list;
     }
 
-    public void setList(java.util.List<mcanddev.minimalisticweather.pojo.OpenWeather.List> list) {
+    public void setList(java.util.List<mcanddev.minimalisticweather.pojo.openweather.List> list) {
         this.list = list;
     }
 

@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mcanddev.minimalisticweather.pojo.MainList;
-import mcanddev.minimalisticweather.pojo.OpenWeather.GetOpenWeather;
+import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 import mcanddev.minimalisticweather.ui.MainPresenter;
 import mcanddev.minimalisticweather.ui.MainViewInterface;
-import mcanddev.minimalisticweather.ui.Notification.SetupNotification;
+import mcanddev.minimalisticweather.ui.notification.SetupNotification;
 import mcanddev.minimalisticweather.utils.GetShared;
 
 
