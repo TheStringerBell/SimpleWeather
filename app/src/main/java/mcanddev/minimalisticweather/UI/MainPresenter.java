@@ -3,8 +3,7 @@ package mcanddev.minimalisticweather.UI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.util.Log;
+
 import android.widget.Toast;
 
 import com.evernote.android.job.JobManager;
