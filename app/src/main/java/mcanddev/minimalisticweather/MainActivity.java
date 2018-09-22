@@ -28,7 +28,7 @@ import mcanddev.minimalisticweather.UI.Notification.SetupNotification;
 import mcanddev.minimalisticweather.service.CreateJob;
 import mcanddev.minimalisticweather.service.JobCreator;
 import mcanddev.minimalisticweather.service.StartJob;
-
+import mcanddev.minimalisticweather.utils.GetShared;
 
 
 public class MainActivity extends AppCompatActivity  implements MainViewInterface{
@@ -44,20 +44,19 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
     ArrayAdapter<String> arrayAdapter;
     ArrayList<String> arrayList = new ArrayList<>();
-
     MainPresenter mainPresenter;
-    SharedPreferences sp;
     String lat;
     String lon;
     String units;
+    GetShared getShared;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        JobManager.create(this).addJobCreator(new JobCreator());
+
         setupMVP();
-        createJob();
+
 
 
         button.setOnClickListener(view ->{
@@ -87,13 +86,15 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     }
 
     public void setupMVP(){
+        getShared = new GetShared(this);
+//        getShared.setupShared();
         mainPresenter = new MainPresenter(this, getApplicationContext());
-        sp = getApplicationContext().getSharedPreferences("Settings", MODE_PRIVATE);
-        lat = sp.getString("Lat", "o");
-        lon = sp.getString("Lon", "o");
-        units = sp.getString("Units", "metric");
 
-        if (!sp.getString("Lat", "o").equals("o")) {
+        lat = getShared.getLat();
+        lon = getShared.getLon();
+        units = getShared.getUnits();
+
+        if (!lat.equals("o")) {
 
             getOnlyWeather();
 
@@ -116,19 +117,13 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @Override
     public void getWeatherObject(GetOpenWeather getWeather) {
         if (getWeather != null) {
-            Log.d("JOB SUCCESS", " ");
 
             new SetupNotification(this, getPackageName(), getWeather, units).setupNotifyLayout();
 
         }
     }
 
-    public void createJob(){
-        if (!lat.equals("o")){
-            CreateJob.scheduleJob();
-        }
 
-    }
 
 
     public void getOnlyWeather(){

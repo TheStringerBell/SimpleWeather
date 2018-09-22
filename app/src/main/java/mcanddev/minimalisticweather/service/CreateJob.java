@@ -19,7 +19,7 @@ import mcanddev.minimalisticweather.UI.Notification.SetupNotification;
 
 public class CreateJob extends Job{
     public static final String TAG = "weather_job";
-    private MainActivity mainActivity = new MainActivity();
+
 
 
 
@@ -27,7 +27,7 @@ public class CreateJob extends Job{
     @Override
     protected Result onRunJob(@NonNull Params params) {
 
-        mainActivity.getOnlyWeather();
+
 
 
 

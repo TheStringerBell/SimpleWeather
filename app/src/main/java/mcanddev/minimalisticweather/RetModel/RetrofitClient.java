@@ -42,29 +42,7 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    public static Retrofit getRetrofitWeather(){
 
-//        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-//        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build();
-
-        if(retrofit == null){
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            OkHttpClient okHttpClient = builder.build();
-
-            retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.darksky.net/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
-
-
-                    .build();
-
-        }
-
-        return retrofit;
-    }
 
 
 

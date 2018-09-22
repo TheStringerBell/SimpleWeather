@@ -3,7 +3,11 @@ package mcanddev.minimalisticweather.UI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.evernote.android.job.JobManager;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -16,7 +20,8 @@ import mcanddev.minimalisticweather.POJO.OpenWeather.GetOpenWeather;
 import mcanddev.minimalisticweather.RetModel.Interface.RetrofitInterface;
 import mcanddev.minimalisticweather.RetModel.OpenWeatherClient;
 import mcanddev.minimalisticweather.RetModel.RetrofitClient;
-
+import mcanddev.minimalisticweather.service.CreateJob;
+import mcanddev.minimalisticweather.service.JobCreator;
 
 
 public class MainPresenter implements MainViewInterface {
@@ -27,9 +32,11 @@ public class MainPresenter implements MainViewInterface {
     private Context context;
 
 
+
     public MainPresenter(MainViewInterface mvi, Context context){
         this.mvi = mvi;
         this.context = context;
+        sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -41,7 +48,11 @@ public class MainPresenter implements MainViewInterface {
     }
 
     public void getPredictionList(String name){
-        getPrediction(name).subscribeWith(getPredictionObserver());
+        getPrediction(name)
+                .subscribe(mainList ->
+                            mvi.fillListView(mainList), throwable -> Toast.makeText(context, "Try again", Toast.LENGTH_SHORT).show()
+                );
+
     }
 
 
@@ -53,27 +64,7 @@ public class MainPresenter implements MainViewInterface {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private DisposableObserver<MainList> getPredictionObserver(){
 
-        return new DisposableObserver<MainList>() {
-            @Override
-            public void onNext(MainList mainList) {
-
-                mvi.fillListView(mainList);
-
-            }
-
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        };
-    }
 
 
     private Observable<GetLocation> getAttributes(String name){
@@ -87,14 +78,6 @@ public class MainPresenter implements MainViewInterface {
 
 
 
-//    private Observable<GetWeather> getWeatherObservable(String lat, String lon){
-//
-//        return WeatherClient.getRetrofitWeather().create(RetrofitInterface.class)
-//                .getWeather("forecast/" +ApiKeys.getWeatherApiKey + "/" +lat +  "," + lon + "?units=auto")
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
-//    }
-
     private Observable<GetOpenWeather> getOpenWeatherObservable(String lat, String lon, String units){
 
         return OpenWeatherClient.getOpenWeatherClient().create(RetrofitInterface.class)
@@ -104,23 +87,6 @@ public class MainPresenter implements MainViewInterface {
     }
 
 
-
-
-
-//    public void combined(String s){
-//        getOpenWeatherObservable("49.0511221", "20.295414", "metric").subscribeWith(getOpenWeatherDisposableObserver());
-//        getAttributes(s).flatMap(getLocation -> {
-//            String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
-//            String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
-//            sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
-//            editor = sp.edit();
-//            editor.putString("Lat", lat);
-//            editor.putString("Lon", lon);
-//            editor.apply();
-//            return getWeatherObservable(lat, lon);
-//        }
-//        ).subscribe(getWeather -> mvi.getWeatherObject(getWeather));
-//    }
 
     public void onlyWeather(String s, String l, String units){
         getOpenWeatherObservable(s, l, units).subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather));
@@ -133,7 +99,7 @@ public class MainPresenter implements MainViewInterface {
                     String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
                     String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
 
-                    sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
                     editor = sp.edit();
                     editor.putString("Lat", lat);
                     editor.putString("Lon", lon);
@@ -142,7 +108,12 @@ public class MainPresenter implements MainViewInterface {
                 }
         )
 
-                .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather));
+                .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather), throwable -> Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show());
+    }
+
+    public void executeJob(){
+        JobManager.create(context).addJobCreator(new JobCreator());
+        CreateJob.scheduleJob();
     }
 
 
