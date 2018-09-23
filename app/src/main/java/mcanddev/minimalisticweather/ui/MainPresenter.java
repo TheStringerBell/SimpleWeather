@@ -50,12 +50,12 @@ public class MainPresenter implements MainViewInterface.presenter {
     public void getOnlyWeather(String s, String l, String units) {
         cDisposable.add(openWeatherClient.getOpenWeatherObservable(s, l, units)
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
-                        throwable -> mvi.showToast(ON_ERROR)));
+                        throwable -> mvi.showToast(ON_ERROR), this::dispose));
 
     }
 
     private void dispose(){
-        cDisposable.dispose();
+        cDisposable.clear();
     }
 
 
