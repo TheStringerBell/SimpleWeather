@@ -1,8 +1,5 @@
 package mcanddev.minimalisticweather.pojo;
 
-/**
- * Created by sOram on 23. 9. 2018.
- */
 
 public class Places {
 

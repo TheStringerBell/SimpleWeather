@@ -1,6 +1,7 @@
 package mcanddev.minimalisticweather.ui;
 
 
+
 import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.network.OpenWeatherClient;
 import mcanddev.minimalisticweather.network.RetrofitClient;
@@ -56,6 +57,7 @@ public class MainPresenter implements MainViewInterface.presenter {
     private void dispose(){
         cDisposable.dispose();
     }
+
 
 
 
