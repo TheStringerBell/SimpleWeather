@@ -9,10 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.pojo.MainList;
 import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 import mcanddev.minimalisticweather.ui.MainPresenter;
@@ -21,7 +24,7 @@ import mcanddev.minimalisticweather.ui.notification.SetupNotification;
 import mcanddev.minimalisticweather.utils.GetShared;
 
 
-public class MainActivity extends AppCompatActivity  implements MainViewInterface{
+public class MainActivity extends AppCompatActivity  implements MainViewInterface.view{
 
     @BindView(R.id.search)
     EditText search;
@@ -39,24 +42,25 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     String lon;
     String units;
     GetShared getShared;
+    boolean restart = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (LeakCanary.isInAnalyzerProcess(this)){
+            return;
+        }
+        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
-
         setupMVP();
-
-
 
         button.setOnClickListener(view ->{
             if (!search.getText().toString().isEmpty()){
-                mainPresenter.getPredictionList((search.getText().toString().replace(" ", "%20")));
+                mainPresenter.getAutocompleteResults((search.getText().toString().replace(" ", "%20")));
             }
         } );
 
     }
-
 
 
     @Override
@@ -82,29 +86,26 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         lat = getShared.getLat();
         lon = getShared.getLon();
         units = getShared.getUnits();
-
-        if (!lat.equals("o")) {
+        if (!lat.equals("o") && !restart) {
             getOnlyWeather();
         }
+
+
     }
 
 
     public void setListViewClicable(){
         listView.setOnItemClickListener((adapterView, view, i, l) ->
-            mainPresenter.combined(arrayAdapter.getItem(i))
+            mainPresenter.getWeatherData(arrayAdapter.getItem(i))
         );
     }
 
     @Override
     public void getWeatherObject(GetOpenWeather getWeather) {
         if (getWeather != null) {
-
             new SetupNotification(this, getPackageName(), getWeather, units).setupNotifyLayout();
-
         }
     }
-
-
 
 
     public void getOnlyWeather(){
@@ -112,6 +113,11 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     }
 
 
+    @Override
+    protected void onPause() {
+        restart = true;
+        super.onPause();
+    }
 
 
 }

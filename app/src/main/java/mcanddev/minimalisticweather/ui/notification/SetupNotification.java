@@ -4,6 +4,7 @@ package mcanddev.minimalisticweather.ui.notification;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.Calendar;
@@ -77,6 +78,7 @@ public class SetupNotification {
     private String getTime(int i){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(list.get(i).getDt() * 1000L);
+        Log.d("nope", "DFOPSKFF");
 
 
 

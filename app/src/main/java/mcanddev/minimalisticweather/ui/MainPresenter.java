@@ -10,8 +10,10 @@ import com.evernote.android.job.JobManager;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import mcanddev.minimalisticweather.API.ApiKeys;
+import mcanddev.minimalisticweather.network.WeatherClient;
 import mcanddev.minimalisticweather.pojo.places.GetLocation;
 import mcanddev.minimalisticweather.pojo.MainList;
 import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
@@ -22,96 +24,72 @@ import mcanddev.minimalisticweather.service.CreateJob;
 import mcanddev.minimalisticweather.service.JobCreator;
 
 
-public class MainPresenter implements MainViewInterface {
+public class MainPresenter implements MainViewInterface.presenter {
 
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
-    private MainViewInterface mvi;
+    private MainViewInterface.view mvi;
     private Context context;
+    private RetrofitClient retrofitClient;
+    private OpenWeatherClient openWeatherClient;
+    private CompositeDisposable cDisposable;
 
 
-
-    public MainPresenter(MainViewInterface mvi, Context context){
+    public MainPresenter(MainViewInterface.view mvi, Context context){
         this.mvi = mvi;
         this.context = context;
         sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        retrofitClient = new RetrofitClient();
+        openWeatherClient = new OpenWeatherClient();
+        cDisposable = new CompositeDisposable();
     }
 
     @Override
-    public void getWeatherObject(GetOpenWeather getWeather) {
-    }
-
-    @Override
-    public void fillListView(MainList mainList) {
-    }
-
-    public void getPredictionList(String name){
-        getPrediction(name)
+    public void getAutocompleteResults(String s) {
+        cDisposable.add(retrofitClient.getPrediction(s)
                 .subscribe(mainList ->
                         mvi.fillListView(mainList), throwable -> Toast.makeText(context, "Try again", Toast.LENGTH_SHORT).show()
-                );
-
+                ));
     }
 
+    @Override
+    public void getWeatherData(String s) {
+        combined(s);
 
-    private Observable<MainList> getPrediction(String name){
-
-        return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-                .getNames("autocomplete/"+"json?input=" +name.replace(" ", "%20")+ "&key=" + ApiKeys.getApiKey + "&types=(cities)")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
     }
-
-
-
-
-    private Observable<GetLocation> getAttributes(String name){
-
-        return RetrofitClient.getRetrofitAutoComplete().create(RetrofitInterface.class)
-                .getLocation("textsearch/"+"json?input=" +name.replace(" ", "%20")+ "&key=" + ApiKeys.getApiKey)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-
-
-
-    private Observable<GetOpenWeather> getOpenWeatherObservable(String lat, String lon, String units){
-
-        return OpenWeatherClient.getOpenWeatherClient().create(RetrofitInterface.class)
-                .getOpenWeather("forecast?lat=" + lat + "&lon=" + lon + "&units=" + units+ "&appid=" + ApiKeys.getOpenWeatherApiKey)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
 
 
     public void onlyWeather(String s, String l, String units){
-        getOpenWeatherObservable(s, l, units).subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather));
+        cDisposable.add(openWeatherClient.getOpenWeatherObservable(s, l, units).subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
+                        throwable -> Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()));
 
     }
 
-    public void combined(String s){
-
-        getAttributes(s).flatMap(getLocation -> {
+    private void combined(String s){
+        cDisposable.add(retrofitClient.getAttributes(s).flatMap(getLocation -> {
                     String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
                     String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
-
-
                     editor = sp.edit();
                     editor.putString("Lat", lat);
                     editor.putString("Lon", lon);
                     editor.apply();
-                    return getOpenWeatherObservable(lat, lon, "metric");
+                    return openWeatherClient.getOpenWeatherObservable(lat, lon, "metric");
                 }
         )
 
-                .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather), throwable -> Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show());
+                .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
+                           throwable -> Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()));
+
+
     }
 
     public void executeJob(){
         JobManager.create(context).addJobCreator(new JobCreator());
         CreateJob.scheduleJob();
+    }
+
+    public void dispose(){
+        cDisposable.dispose();
     }
 
 
