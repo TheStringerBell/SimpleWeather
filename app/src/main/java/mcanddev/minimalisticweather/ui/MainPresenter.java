@@ -1,28 +1,9 @@
 package mcanddev.minimalisticweather.ui;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import android.widget.Toast;
-
-import com.evernote.android.job.JobManager;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-import mcanddev.minimalisticweather.API.ApiKeys;
-import mcanddev.minimalisticweather.network.WeatherClient;
-import mcanddev.minimalisticweather.pojo.places.GetLocation;
-import mcanddev.minimalisticweather.pojo.MainList;
-import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
-import mcanddev.minimalisticweather.network.model.RetrofitInterface;
 import mcanddev.minimalisticweather.network.OpenWeatherClient;
 import mcanddev.minimalisticweather.network.RetrofitClient;
-import mcanddev.minimalisticweather.service.CreateJob;
-import mcanddev.minimalisticweather.service.JobCreator;
-
 
 public class MainPresenter implements MainViewInterface.presenter {
 
@@ -60,9 +41,8 @@ public class MainPresenter implements MainViewInterface.presenter {
                     return openWeatherClient.getOpenWeatherObservable(lat, lon, "metric");
                 })
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
-                        throwable -> mvi.showToast(ON_ERROR)));
+                        throwable -> mvi.showToast(ON_ERROR), this::dispose));
     }
-
 
 
     @Override
