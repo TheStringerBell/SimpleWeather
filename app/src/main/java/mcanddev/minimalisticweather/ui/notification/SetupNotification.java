@@ -78,9 +78,6 @@ public class SetupNotification {
     private String getTime(int i){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(list.get(i).getDt() * 1000L);
-        Log.d("nope", "DFOPSKFF");
-
-
 
         if (units.equals("metric")){
             if (calendar.get(Calendar.HOUR_OF_DAY) < 10){

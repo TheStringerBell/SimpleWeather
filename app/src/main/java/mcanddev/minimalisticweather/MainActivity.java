@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.leakcanary.LeakCanary;
 
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     public void setupMVP(){
         getShared = new GetShared(this);
         mainPresenter = new MainPresenter(this, getApplicationContext());
-
         lat = getShared.getLat();
         lon = getShared.getLon();
         units = getShared.getUnits();
@@ -100,6 +100,12 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         );
     }
 
+
+    @Override
+    public void showToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void getWeatherObject(GetOpenWeather getWeather) {
         if (getWeather != null) {
@@ -108,8 +114,10 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     }
 
 
+
+
     public void getOnlyWeather(){
-        mainPresenter.onlyWeather(lat, lon, units );
+        mainPresenter.getOnlyWeather(lat, lon, units );
     }
 
 

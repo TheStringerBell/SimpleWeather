@@ -10,11 +10,13 @@ public interface MainViewInterface {
     interface view{
         void fillListView(MainList mainList);
         void getWeatherObject(GetOpenWeather getWeather);
+        void showToast(String s);
 
     }
     interface presenter{
         void getAutocompleteResults(String s);
         void getWeatherData(String s);
+        void getOnlyWeather(String s, String l, String units);
     }
 
 
