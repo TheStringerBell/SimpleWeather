@@ -26,20 +26,16 @@ import mcanddev.minimalisticweather.service.JobCreator;
 
 public class MainPresenter implements MainViewInterface.presenter {
 
-    private SharedPreferences sp;
-    private SharedPreferences.Editor editor;
+
     private MainViewInterface.view mvi;
-    private Context context;
     private RetrofitClient retrofitClient;
     private OpenWeatherClient openWeatherClient;
     private CompositeDisposable cDisposable;
     private static final String ON_ERROR = "Something went wrong";
 
 
-    public MainPresenter(MainViewInterface.view mvi, Context context){
+    public MainPresenter(MainViewInterface.view mvi){
         this.mvi = mvi;
-        this.context = context;
-        sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
         retrofitClient = new RetrofitClient();
         openWeatherClient = new OpenWeatherClient();
         cDisposable = new CompositeDisposable();
@@ -59,10 +55,8 @@ public class MainPresenter implements MainViewInterface.presenter {
                 .flatMap(getLocation -> {
                     String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
                     String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
-                    editor = sp.edit();
-                    editor.putString("Lat", lat);
-                    editor.putString("Lon", lon);
-                    editor.apply();
+                    mvi.setSharedPref(lat, lon);
+
                     return openWeatherClient.getOpenWeatherObservable(lat, lon, "metric");
                 })
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),

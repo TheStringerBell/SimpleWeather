@@ -5,6 +5,9 @@ package mcanddev.minimalisticweather;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -13,19 +16,22 @@ import android.widget.Toast;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.pojo.MainList;
+import mcanddev.minimalisticweather.pojo.Places;
 import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 import mcanddev.minimalisticweather.ui.MainPresenter;
 import mcanddev.minimalisticweather.ui.MainViewInterface;
 import mcanddev.minimalisticweather.ui.notification.SetupNotification;
 import mcanddev.minimalisticweather.utils.GetShared;
+import mcanddev.minimalisticweather.utils.MyRecyclerViewAdapter;
 
 
-public class MainActivity extends AppCompatActivity  implements MainViewInterface.view{
+public class MainActivity extends AppCompatActivity  implements MainViewInterface.view, MainViewInterface.recycleView{
 
     @BindView(R.id.search)
     EditText search;
@@ -33,10 +39,9 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @BindView(R.id.button)
     AppCompatButton button;
 
-    @BindView(R.id.listView)
-    ListView listView;
+    @BindView(R.id.recycleView)
+    RecyclerView recyclerView;
 
-    ArrayAdapter<String> arrayAdapter;
     ArrayList<String> arrayList = new ArrayList<>();
     MainPresenter mainPresenter;
     String lat;
@@ -44,6 +49,8 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     String units;
     GetShared getShared;
     boolean restart = false;
+    RecyclerView.Adapter adapter;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +58,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         if (LeakCanary.isInAnalyzerProcess(this)){
             return;
         }
-        LeakCanary.install(getApplication());
+//        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         setupMVP();
 
@@ -71,35 +78,32 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
             for (int i = 0; i < mainList.getPredictions().size(); i++){
                 arrayList.add(mainList.getPredictions().get(i).getDescription());
             }
-
-            arrayAdapter = new ArrayAdapter<>(this, R.layout.row, arrayList);
-            listView.setAdapter(arrayAdapter);
-            setListViewClicable();
+            adapter = new MyRecyclerViewAdapter(arrayList, this);
+            recyclerView.setAdapter(adapter);
 
         }
 
     }
 
     public void setupMVP(){
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         getShared = new GetShared(this);
-        mainPresenter = new MainPresenter(this, getApplicationContext());
+        mainPresenter = new MainPresenter(this);
         lat = getShared.getLat();
         lon = getShared.getLon();
         units = getShared.getUnits();
         if (!lat.equals("o") && !restart) {
-            getOnlyWeather();
+            mainPresenter.getOnlyWeather(lat, lon, units );
         }
-
-
     }
 
+    @Override
+    public void getPlace(int i) {
+        mainPresenter.getWeatherData(arrayList.get(i));
 
-    public void setListViewClicable(){
-        listView.setOnItemClickListener((adapterView, view, i, l) ->
-            mainPresenter.getWeatherData(arrayAdapter.getItem(i))
-        );
     }
-
 
     @Override
     public void showToast(String s) {
@@ -113,13 +117,13 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         }
     }
 
+    @Override
+    public void setSharedPref(String lat, String lon) {
+            getShared.setLat(lat);
+            getShared.setLon(lon);
+//            getShared.setLat(units);
 
-
-
-    public void getOnlyWeather(){
-        mainPresenter.getOnlyWeather(lat, lon, units );
     }
-
 
     @Override
     protected void onPause() {

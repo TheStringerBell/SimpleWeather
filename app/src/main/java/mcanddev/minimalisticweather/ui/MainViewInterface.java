@@ -11,12 +11,16 @@ public interface MainViewInterface {
         void fillListView(MainList mainList);
         void getWeatherObject(GetOpenWeather getWeather);
         void showToast(String s);
+        void setSharedPref(String lat, String lon);
 
     }
     interface presenter{
         void getAutocompleteResults(String s);
         void getWeatherData(String s);
         void getOnlyWeather(String s, String l, String units);
+    }
+    interface recycleView{
+        void getPlace(int i);
     }
 
 
