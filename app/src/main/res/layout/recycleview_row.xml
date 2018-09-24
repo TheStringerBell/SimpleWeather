@@ -3,12 +3,14 @@
     android:orientation="horizontal"
     android:padding="10dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/recycleTextView"
         android:layout_width="match_parent"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

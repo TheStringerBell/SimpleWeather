@@ -12,11 +12,14 @@ public interface MainViewInterface {
         void getWeatherObject(GetOpenWeather getWeather);
         void showToast(String s);
         void setSharedPref(String lat, String lon);
+        void setUnits(String units);
+        void setButtonColor(int color, int color2);
 
     }
     interface presenter{
         void getAutocompleteResults(String s);
-        void getWeatherData(String s);
+        void getWeatherData(String s, String units);
+        void getButtonState(Boolean b);
         void getOnlyWeather(String s, String l, String units);
     }
     interface recycleView{

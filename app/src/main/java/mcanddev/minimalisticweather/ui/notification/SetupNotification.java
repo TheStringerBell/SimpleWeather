@@ -20,6 +20,7 @@ public class SetupNotification {
     private String PACKAGE_NAME;
     private String units;
     private GetOpenWeather data;
+    private GetWeatherIcon getWeatherIcon = new GetWeatherIcon();
     private List<mcanddev.minimalisticweather.pojo.openweather.List> list;
 
 
@@ -101,7 +102,7 @@ public class SetupNotification {
 
     }
     private int getIcon(String s){
-        return new GetWeatherIcon(s).getIcon();
+        return getWeatherIcon.getIcon(s);
     }
 
     private String getTemp(Double d){

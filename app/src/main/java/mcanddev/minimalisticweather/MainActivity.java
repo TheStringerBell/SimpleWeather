@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.leakcanary.LeakCanary;
@@ -42,6 +43,16 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @BindView(R.id.recycleView)
     RecyclerView recyclerView;
 
+    @BindView(R.id.currentPlace)
+    TextView currentPlace;
+
+    @BindView(R.id.cels)
+    TextView celsiusButton;
+
+    @BindView(R.id.fer)
+    TextView ferButton;
+
+
     ArrayList<String> arrayList = new ArrayList<>();
     MainPresenter mainPresenter;
     String lat;
@@ -50,6 +61,8 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     GetShared getShared;
     boolean restart = false;
     RecyclerView.Adapter adapter;
+    int active;
+    int deactive;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +74,14 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 //        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         setupMVP();
+
+        celsiusButton.setOnClickListener(view -> {
+            mainPresenter.getButtonState(true);
+        });
+
+        ferButton.setOnClickListener(view -> {
+            mainPresenter.getButtonState(false);
+        });
 
         button.setOnClickListener(view ->{
             if (!search.getText().toString().isEmpty()){
@@ -101,7 +122,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
     @Override
     public void getPlace(int i) {
-        mainPresenter.getWeatherData(arrayList.get(i));
+        mainPresenter.getWeatherData(arrayList.get(i), units);
 
     }
 
@@ -121,8 +142,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     public void setSharedPref(String lat, String lon) {
             getShared.setLat(lat);
             getShared.setLon(lon);
-//            getShared.setLat(units);
-
     }
 
     @Override
@@ -131,5 +150,15 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         super.onPause();
     }
 
+    @Override
+    public void setButtonColor(int color, int color2) {
+        celsiusButton.setTextColor(color);
+        ferButton.setTextColor(color2);
+    }
 
+    @Override
+    public void setUnits(String s) {
+        getShared.setUnits(s);
+        units = s;
+    }
 }

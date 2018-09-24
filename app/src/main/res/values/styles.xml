@@ -17,5 +17,11 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="ToggleButton.CustomTheme" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/active</item>
+        <item name="colorControlActivated">@color/deactive</item>
+
+    </style>
+
 
 </resources>

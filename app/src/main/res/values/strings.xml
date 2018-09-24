@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Minimalistic Weather</string>
     <string name="cd">Weather Icon</string>
+    <string name="search">Place</string>
+    <string name="button">Search</string>
+    <string name="cels">°C</string>
+    <string name="fer">°F</string>
 </resources>

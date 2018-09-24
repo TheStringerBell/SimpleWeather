@@ -37,7 +37,7 @@ public class GetShared {
     }
 
     public void setUnits(String value){
-        editor.putString("units", value);
+        editor.putString("Units", value);
         apply();
     }
 
