@@ -1,8 +1,6 @@
 package mcanddev.minimalisticweather.ui;
 
 
-
-import android.content.res.Resources;
 import android.graphics.Color;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,7 +43,6 @@ public class MainPresenter implements MainViewInterface.presenter {
                     String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
                     String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
                     mvi.setSharedPref(lat, lon);
-
                     return openWeatherClient.getOpenWeatherObservable(lat, lon, units);
                 })
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
@@ -58,7 +55,6 @@ public class MainPresenter implements MainViewInterface.presenter {
         cDisposable.add(openWeatherClient.getOpenWeatherObservable(s, l, units)
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
                         throwable -> mvi.showToast(ON_ERROR), this::dispose));
-
     }
 
     @Override
@@ -70,8 +66,6 @@ public class MainPresenter implements MainViewInterface.presenter {
             mvi.setButtonColor(deactive, active);
             mvi.setUnits("imperial");
         }
-
-
 
     }
 

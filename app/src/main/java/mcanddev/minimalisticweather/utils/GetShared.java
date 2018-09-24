@@ -18,6 +18,9 @@ public class GetShared {
     public String getLat(){
         return sp.getString("Lat", "o");
     }
+    public String getPlace(){
+        return sp.getString("Place", "City");
+    }
 
     public String getLon(){
         return sp.getString("Lon", "o");
@@ -38,6 +41,10 @@ public class GetShared {
 
     public void setUnits(String value){
         editor.putString("Units", value);
+        apply();
+    }
+    public void setPlace(String value){
+        editor.putString("Place", value);
         apply();
     }
 

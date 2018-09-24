@@ -23,8 +23,6 @@ public class SetupNotification {
     private GetWeatherIcon getWeatherIcon = new GetWeatherIcon();
     private List<mcanddev.minimalisticweather.pojo.openweather.List> list;
 
-
-
     public SetupNotification(Context context, String PACKAGE_NAME, GetOpenWeather data, String units){
         this.context = context;
         this.PACKAGE_NAME = PACKAGE_NAME;
@@ -35,9 +33,7 @@ public class SetupNotification {
 
     public void setupNotifyLayout(){
 
-
         RemoteViews remoteViews = new RemoteViews(PACKAGE_NAME, R.layout.custom_notify_layout);
-
 
         remoteViews.setImageViewResource(R.id.image, getIcon(list.get(0).getWeather().get(0).getIcon()));
         remoteViews.setTextViewText(R.id.time, getTime(0));
@@ -59,21 +55,13 @@ public class SetupNotification {
         remoteViews.setTextViewText(R.id.time6, getTime(4));
         remoteViews.setTextViewText(R.id.temp6, getTemp(list.get(4).getMain().getTemp()));
 
-
-
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "SIMPLE_WEATHER")
                 .setContent(remoteViews)
                 .setSmallIcon(R.mipmap.cloudy)
-//                .setStyle(new NotificationCompat.InboxStyle()
-//                .addLine("Wind")
-//                .addLine("Temp")
-//                        .addLine("Summary"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(1, mBuilder.build());
-
     }
 
     private String getTime(int i){
@@ -97,9 +85,6 @@ public class SetupNotification {
             return  "12" +  " PM";
         }
             return  calendar.get(Calendar.HOUR) +  " AM";
-
-
-
     }
     private int getIcon(String s){
         return getWeatherIcon.getIcon(s);

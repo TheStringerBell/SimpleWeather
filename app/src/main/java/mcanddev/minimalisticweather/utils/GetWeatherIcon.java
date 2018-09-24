@@ -42,27 +42,4 @@ public class GetWeatherIcon {
         return icon;
     }
 
-//    public int getIcon(){
-//
-//        switch (weather){
-//            case "clear-day": icon = R.mipmap.sunny; break;
-//            case "clear-night": icon = R.mipmap.night_clear; break;
-//            case "rain": icon = R.mipmap.rain; break;
-//            case "snow": icon = R.mipmap.snow; break;                               // for DarkSky api
-//            case "sleet": icon = R.mipmap.snowrain; break;
-//            case "wind": icon = R.mipmap.windy; break;
-//            case "fog": icon = R.mipmap.fog; break;
-//            case "cloudy": icon = R.mipmap.cloudy; break;
-//            case "partly-cloudy-day": icon = R.mipmap.partlycloudy; break;
-//            case "partly-cloudy-night": icon = R.mipmap.night_cloudy; break;
-//            case "hail": icon = R.mipmap.hail; break;
-//            case "thunderstorm": icon = R.mipmap.thunderstorm; break;
-//        }
-//
-//
-//        return icon;
-//    }
-
-
-
 }

@@ -2,28 +2,22 @@ package mcanddev.minimalisticweather;
 
 
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.squareup.leakcanary.LeakCanary;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.pojo.MainList;
-import mcanddev.minimalisticweather.pojo.Places;
 import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 import mcanddev.minimalisticweather.ui.MainPresenter;
 import mcanddev.minimalisticweather.ui.MainViewInterface;
@@ -52,43 +46,36 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @BindView(R.id.fer)
     TextView ferButton;
 
-
     ArrayList<String> arrayList = new ArrayList<>();
     MainPresenter mainPresenter;
     String lat;
     String lon;
     String units;
+    String place;
     GetShared getShared;
     boolean restart = false;
     RecyclerView.Adapter adapter;
-    int active;
-    int deactive;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (LeakCanary.isInAnalyzerProcess(this)){
-            return;
-        }
-//        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         setupMVP();
 
-        celsiusButton.setOnClickListener(view -> {
-            mainPresenter.getButtonState(true);
-        });
+        celsiusButton.setOnClickListener(view ->
+            mainPresenter.getButtonState(true));
 
-        ferButton.setOnClickListener(view -> {
-            mainPresenter.getButtonState(false);
-        });
+        ferButton.setOnClickListener(view ->
+            mainPresenter.getButtonState(false));
 
         button.setOnClickListener(view ->{
             if (!search.getText().toString().isEmpty()){
                 mainPresenter.getAutocompleteResults((search.getText().toString().replace(" ", "%20")));
+                hideKeyboard();
             }
         } );
-
     }
 
 
@@ -101,20 +88,21 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
             }
             adapter = new MyRecyclerViewAdapter(arrayList, this);
             recyclerView.setAdapter(adapter);
-
         }
-
     }
 
     public void setupMVP(){
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter = new MyRecyclerViewAdapter(arrayList, this);
+        recyclerView.setAdapter(adapter);
         getShared = new GetShared(this);
         mainPresenter = new MainPresenter(this);
         lat = getShared.getLat();
         lon = getShared.getLon();
         units = getShared.getUnits();
+        place = getShared.getPlace();
+        currentPlace.setText(place);
         if (!lat.equals("o") && !restart) {
             mainPresenter.getOnlyWeather(lat, lon, units );
         }
@@ -123,6 +111,9 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @Override
     public void getPlace(int i) {
         mainPresenter.getWeatherData(arrayList.get(i), units);
+        Toast.makeText(this, arrayList.get(i), Toast.LENGTH_SHORT).show();
+        currentPlace.setText(arrayList.get(i));
+        getShared.setPlace(arrayList.get(i));
 
     }
 
@@ -161,4 +152,20 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         getShared.setUnits(s);
         units = s;
     }
+
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null){
+            view = new View(this);
+        }
+        try {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }catch (NullPointerException n){
+            n.printStackTrace();
+        }
+
+
+    }
 }
+

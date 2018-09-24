@@ -26,6 +26,4 @@ public interface MainViewInterface {
         void getPlace(int i);
     }
 
-
-//    void getText(String s);
 }

@@ -9,6 +9,7 @@
         android:id="@+id/recycleTextView"
         android:layout_width="match_parent"
         android:textAlignment="center"
+        android:textSize="15sp"
         android:textColor="@color/colorPrimaryDark"
         android:textStyle="bold"
         android:layout_height="wrap_content" />
