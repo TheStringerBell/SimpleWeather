@@ -29,6 +29,7 @@ public class MainPresenter implements MainViewInterface.presenter {
         deactive = Color.parseColor("#f9f9f9");
     }
 
+    // get city names from Googles Autocomplete API
     @Override
     public void getAutocompleteResults(String s) {
         cDisposable.add(retrofitClient.getPrediction(s.replace(" ", "%20"))
@@ -37,6 +38,7 @@ public class MainPresenter implements MainViewInterface.presenter {
                               throwable -> mvi.showToast(ON_ERROR)));
     }
 
+    // get latitude and longitude from Googles Places API and object with weather forecast from Openweather API
     @Override
     public void getWeatherData(String s, String units) {
         cDisposable.add(retrofitClient.getAttributes(s)
@@ -50,15 +52,15 @@ public class MainPresenter implements MainViewInterface.presenter {
                         throwable -> mvi.showToast(ON_ERROR), this::dispose));
     }
 
-
+    // get only weather forecast
     @Override
     public void getOnlyWeather(String s, String l, String units) {
-        Log.d("da", "dasd");
         cDisposable.add(openWeatherClient.getOpenWeatherObservable(s, l, units)
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
                         throwable -> mvi.showToast(ON_ERROR), this::dispose));
     }
 
+    // change units in sharedpref and set button colors
     @Override
     public void getButtonState(Boolean b) {
         if (b){
@@ -68,7 +70,13 @@ public class MainPresenter implements MainViewInterface.presenter {
             mvi.setButtonColor(deactive, active);
             mvi.setUnits("imperial");
         }
+    }
 
+    @Override
+    public void checkLatitudeAtStartUp(String s, String l, String units) {
+        if (!s.equals("o")){
+            getOnlyWeather(s, l, units);
+        }
     }
 
     private void dispose(){

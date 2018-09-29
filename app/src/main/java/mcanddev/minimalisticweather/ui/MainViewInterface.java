@@ -21,6 +21,7 @@ public interface MainViewInterface {
         void getWeatherData(String s, String units);
         void getButtonState(Boolean b);
         void getOnlyWeather(String s, String l, String units);
+        void checkLatitudeAtStartUp(String s, String l, String units);
     }
     interface recycleView{
         void getPlace(int i);

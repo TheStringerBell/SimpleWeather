@@ -102,9 +102,8 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         units = getShared.getUnits();
         place = getShared.getPlace();
         currentPlace.setText(place);
-        if (!lat.equals("o")) {
-            mainPresenter.getOnlyWeather(lat, lon, units );
-        }
+        mainPresenter.checkLatitudeAtStartUp(lat, lon, units );  // check if there is saved city in sharedpref
+
     }
 
     @Override
