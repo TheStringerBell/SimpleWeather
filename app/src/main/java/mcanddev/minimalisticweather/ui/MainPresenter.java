@@ -2,6 +2,7 @@ package mcanddev.minimalisticweather.ui;
 
 
 import android.graphics.Color;
+import android.util.Log;
 
 import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.network.OpenWeatherClient;
@@ -30,7 +31,7 @@ public class MainPresenter implements MainViewInterface.presenter {
 
     @Override
     public void getAutocompleteResults(String s) {
-        cDisposable.add(retrofitClient.getPrediction(s)
+        cDisposable.add(retrofitClient.getPrediction(s.replace(" ", "%20"))
                    .subscribe(mainList ->
                               mvi.fillListView(mainList),
                               throwable -> mvi.showToast(ON_ERROR)));
@@ -52,6 +53,7 @@ public class MainPresenter implements MainViewInterface.presenter {
 
     @Override
     public void getOnlyWeather(String s, String l, String units) {
+        Log.d("da", "dasd");
         cDisposable.add(openWeatherClient.getOpenWeatherObservable(s, l, units)
                 .subscribe(getOpenWeather -> mvi.getWeatherObject(getOpenWeather),
                         throwable -> mvi.showToast(ON_ERROR), this::dispose));

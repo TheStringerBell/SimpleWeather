@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     String units;
     String place;
     GetShared getShared;
-    boolean restart = false;
     RecyclerView.Adapter adapter;
 
 
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
         button.setOnClickListener(view ->{
             if (!search.getText().toString().isEmpty()){
-                mainPresenter.getAutocompleteResults((search.getText().toString().replace(" ", "%20")));
+                mainPresenter.getAutocompleteResults((search.getText().toString()));
                 hideKeyboard();
             }
         } );
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         units = getShared.getUnits();
         place = getShared.getPlace();
         currentPlace.setText(place);
-        if (!lat.equals("o") && !restart) {
+        if (!lat.equals("o")) {
             mainPresenter.getOnlyWeather(lat, lon, units );
         }
     }
@@ -111,7 +110,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @Override
     public void getPlace(int i) {
         mainPresenter.getWeatherData(arrayList.get(i), units);
-        Toast.makeText(this, arrayList.get(i), Toast.LENGTH_SHORT).show();
         currentPlace.setText(arrayList.get(i));
         getShared.setPlace(arrayList.get(i));
 
@@ -135,11 +133,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
             getShared.setLon(lon);
     }
 
-    @Override
-    protected void onPause() {
-        restart = true;
-        super.onPause();
-    }
 
     @Override
     public void setButtonColor(int color, int color2) {

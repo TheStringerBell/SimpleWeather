@@ -55,12 +55,17 @@ public class SetupNotification {
         remoteViews.setTextViewText(R.id.time6, getTime(4));
         remoteViews.setTextViewText(R.id.temp6, getTemp(list.get(4).getMain().getTemp()));
 
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "SIMPLE_WEATHER")
+
                 .setContent(remoteViews)
                 .setSmallIcon(R.mipmap.cloudy)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
+
         managerCompat.notify(1, mBuilder.build());
     }
 
