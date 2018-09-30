@@ -79,12 +79,9 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
 
 
     @Override
-    public void fillListView(MainList mainList) {
-        if (mainList != null){
-            if (!arrayList.isEmpty()){arrayList.clear();}
-            for (int i = 0; i < mainList.getPredictions().size(); i++){
-                arrayList.add(mainList.getPredictions().get(i).getDescription());
-            }
+    public void fillListView(ArrayList<String> arrayLists) {
+        if (arrayLists != null){
+            arrayList = arrayLists;
             adapter = new MyRecyclerViewAdapter(arrayList, this);
             recyclerView.setAdapter(adapter);
         }

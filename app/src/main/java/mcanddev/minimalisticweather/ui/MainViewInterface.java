@@ -1,6 +1,8 @@
 package mcanddev.minimalisticweather.ui;
 
 
+import java.util.ArrayList;
+
 import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.pojo.MainList;
 import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
@@ -8,7 +10,7 @@ import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
 public interface MainViewInterface {
 
     interface view{
-        void fillListView(MainList mainList);
+        void fillListView(ArrayList<String> arrayList);
         void getWeatherObject(GetOpenWeather getWeather);
         void showToast(String s);
         void setSharedPref(String lat, String lon);

@@ -4,9 +4,12 @@ package mcanddev.minimalisticweather.ui;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.network.OpenWeatherClient;
 import mcanddev.minimalisticweather.network.RetrofitClient;
+import mcanddev.minimalisticweather.pojo.MainList;
 
 public class MainPresenter implements MainViewInterface.presenter {
 
@@ -18,6 +21,7 @@ public class MainPresenter implements MainViewInterface.presenter {
     private static final String ON_ERROR = "Something went wrong";
     private int active;
     private int deactive;
+    private ArrayList<String> arrayList;
 
 
     public MainPresenter(MainViewInterface.view mvi){
@@ -27,6 +31,7 @@ public class MainPresenter implements MainViewInterface.presenter {
         cDisposable = new CompositeDisposable();
         active = Color.parseColor("#FF4081");
         deactive = Color.parseColor("#f9f9f9");
+        arrayList = new ArrayList<>();
     }
 
     // get city names from Googles Autocomplete API
@@ -34,14 +39,14 @@ public class MainPresenter implements MainViewInterface.presenter {
     public void getAutocompleteResults(String s) {
         cDisposable.add(retrofitClient.getPrediction(s.replace(" ", "%20"))
                    .subscribe(mainList ->
-                              mvi.fillListView(mainList),
+                              mvi.fillListView(getArrayList(mainList)),
                               throwable -> mvi.showToast(ON_ERROR)));
     }
 
     // get latitude and longitude from Googles Places API and object with weather forecast from Openweather API
     @Override
     public void getWeatherData(String s, String units) {
-        cDisposable.add(retrofitClient.getAttributes(s)
+        cDisposable.add(retrofitClient.getAttributes(s.replace(" ", "%20"))
                 .flatMap(getLocation -> {
                     String lat = getLocation.getResults().get(0).getGeometry().getLocation().getLat().toString();
                     String lon = getLocation.getResults().get(0).getGeometry().getLocation().getLng().toString();
@@ -81,6 +86,17 @@ public class MainPresenter implements MainViewInterface.presenter {
 
     private void dispose(){
         cDisposable.clear();
+    }
+
+    private ArrayList<String> getArrayList(MainList mainList){
+        if (mainList != null){
+            if (!arrayList.isEmpty()){arrayList.clear();}
+            for (int i = 0; i < mainList.getPredictions().size(); i++){
+                arrayList.add(mainList.getPredictions().get(i).getDescription());
+            }
+        }
+        return arrayList;
+
     }
 
 
