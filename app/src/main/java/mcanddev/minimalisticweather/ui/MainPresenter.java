@@ -2,14 +2,20 @@ package mcanddev.minimalisticweather.ui;
 
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.evernote.android.job.Job;
+import com.evernote.android.job.JobRequest;
+
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
 import mcanddev.minimalisticweather.network.OpenWeatherClient;
 import mcanddev.minimalisticweather.network.RetrofitClient;
 import mcanddev.minimalisticweather.pojo.MainList;
+import mcanddev.minimalisticweather.service.MySyncJob;
 
 public class MainPresenter implements MainViewInterface.presenter {
 
@@ -81,6 +87,7 @@ public class MainPresenter implements MainViewInterface.presenter {
     public void checkLatitudeAtStartUp(String s, String l, String units) {
         if (!s.equals("o")){
             getOnlyWeather(s, l, units);
+            scheduleJob();
         }
     }
 
@@ -98,9 +105,13 @@ public class MainPresenter implements MainViewInterface.presenter {
         return arrayList;
 
     }
-
-
-
-
+    public static void scheduleJob(){
+        new JobRequest.Builder(MySyncJob.TAG)
+                .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .build()
+                .schedule();
+    }
 
 }

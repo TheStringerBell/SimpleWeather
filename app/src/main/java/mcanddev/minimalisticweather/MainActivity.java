@@ -14,11 +14,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.evernote.android.job.JobManager;
+
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mcanddev.minimalisticweather.pojo.MainList;
 import mcanddev.minimalisticweather.pojo.openweather.GetOpenWeather;
+import mcanddev.minimalisticweather.service.MyJobCreator;
 import mcanddev.minimalisticweather.ui.MainPresenter;
 import mcanddev.minimalisticweather.ui.MainViewInterface;
 import mcanddev.minimalisticweather.ui.notification.SetupNotification;
@@ -31,8 +36,6 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
     @BindView(R.id.search)
     EditText search;
 
-    @BindView(R.id.button)
-    AppCompatButton button;
 
     @BindView(R.id.recycleView)
     RecyclerView recyclerView;
@@ -61,20 +64,8 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        JobManager.create(this).addJobCreator(new MyJobCreator());
         setupMVP();
-
-        celsiusButton.setOnClickListener(view ->
-            mainPresenter.getButtonState(true));
-
-        ferButton.setOnClickListener(view ->
-            mainPresenter.getButtonState(false));
-
-        button.setOnClickListener(view ->{
-            if (!search.getText().toString().isEmpty()){
-                mainPresenter.getAutocompleteResults((search.getText().toString()));
-                hideKeyboard();
-            }
-        } );
     }
 
 
@@ -153,8 +144,21 @@ public class MainActivity extends AppCompatActivity  implements MainViewInterfac
         }catch (NullPointerException n){
             n.printStackTrace();
         }
-
-
+    }
+    @OnClick(R.id.button)
+        public void submit(View view){
+            if (!search.getText().toString().isEmpty()){
+            mainPresenter.getAutocompleteResults((search.getText().toString()));
+            hideKeyboard();
+            }
+    }
+    @OnClick(R.id.cels)
+    public void celsius(View view){
+        mainPresenter.getButtonState(true);
+    }
+    @OnClick(R.id.fer)
+    public void fer(View view){
+        mainPresenter.getButtonState(false);
     }
 }
 
